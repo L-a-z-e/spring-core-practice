@@ -1,12 +1,14 @@
 package com.laze.springcorepractice.config;
 
 import com.laze.springcorepractice.common.MySimpleBean;
+import com.laze.springcorepractice.common.PrototypeBean;
 import com.laze.springcorepractice.notification.service.EmailNotificationService;
 import com.laze.springcorepractice.notification.service.NotificationService;
 import com.laze.springcorepractice.notification.service.SmsNotificationService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
 public class AppConfig {
@@ -40,5 +42,12 @@ public class AppConfig {
         MySimpleBean bean = new MySimpleBean();
         bean.setMessage("Hello from MySimpleBeanViaSetter");
         return bean;
+    }
+
+    @Bean
+    @Scope("prototype")
+    public PrototypeBean prototypeBean() {
+        System.out.println("AppConfig: Creating a new PrototypeBean instance");
+        return new PrototypeBean();
     }
 }
