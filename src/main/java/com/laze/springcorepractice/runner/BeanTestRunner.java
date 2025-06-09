@@ -7,6 +7,7 @@ import com.laze.springcorepractice.common.SingletonConsumingPrototype;
 import com.laze.springcorepractice.config.AppProperties;
 import com.laze.springcorepractice.notification.service.NotificationService;
 import com.laze.springcorepractice.service.ProfileSpecificMessageService;
+import com.laze.springcorepractice.service.SimpleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
@@ -21,17 +22,20 @@ public class BeanTestRunner implements CommandLineRunner {
     private final NotificationService emailNotificationService;
     private final MyComponentBean myComponentBean;
     private final AppProperties appProperties;
+    private final SimpleService simpleService;
 
     @Autowired(required = false)
     private ProfileSpecificMessageService profileSpecificMessageService;
 
+
     // 생성자 주입
-    public BeanTestRunner(ApplicationContext applicationContext, NotificationService primaryNotificationService, @Qualifier(value = "emailNotificationService") NotificationService emailNotificationService, MyComponentBean myComponentBean, AppProperties appProperties) {
+    public BeanTestRunner(ApplicationContext applicationContext, NotificationService primaryNotificationService, @Qualifier(value = "emailNotificationService") NotificationService emailNotificationService, MyComponentBean myComponentBean, AppProperties appProperties, SimpleService simpleService) {
         this.applicationContext = applicationContext;
         this.primaryNotificationService = primaryNotificationService;
         this.emailNotificationService = emailNotificationService;
         this.myComponentBean = myComponentBean;
         this.appProperties = appProperties;
+        this.simpleService = simpleService;
     }
 
     @Override
@@ -128,5 +132,12 @@ public class BeanTestRunner implements CommandLineRunner {
             String[] defaultProfiles = applicationContext.getEnvironment().getDefaultProfiles();
             System.out.println("Default profiles: " + String.join(", ", defaultProfiles));
         }
+
+        System.out.println("\n--- [BeanTestRunner] Testing AOP with SimpleService ---");
+        String result1 = simpleService.doSomethingSimple("hello aop");
+        System.out.println("Result from doSomethingSimple: " + result1);
+
+        simpleService.anotherMethod();
+        simpleService.executePrivateLogic("something private");
     }
 }
